@@ -6,7 +6,13 @@ const axios = require("axios");
  * @param {*} csrfToken
  * @param {*} profiledata history mxReqToken consumer time
  */
-async function login(mxReqToken, csrfToken, profiledata = {}) {
+async function login(
+  username,
+  password,
+  mxReqToken,
+  csrfToken,
+  profiledata = {}
+) {
   const headers = {
     accept: "application/json",
     "accept-language":
@@ -33,8 +39,8 @@ async function login(mxReqToken, csrfToken, profiledata = {}) {
     {
       action: "login",
       params: {
-        username: "MxAdmin",
-        password: "root@1234",
+        username,
+        password,
       },
       profiledata,
     },
