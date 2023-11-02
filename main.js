@@ -12,8 +12,8 @@ async function main() {
   const start = Date.now();
   const promises = [];
 
-  for (let i = 0; i < 1; i++) {
-    promises.push(oneLoop());
+  for (let i = 0; i < 1000; i++) {
+    promises.push(oneLoop(i));
   }
 
   await Promise.all(promises);
@@ -24,7 +24,7 @@ async function main() {
   console.log(`One hour can execute ${hour} times`);
 }
 
-async function oneLoop() {
+async function oneLoop(index) {
   const { xasid, XASSESSIONID } = await login("MxAdmin", "1");
 
   const { csrftoken } = await getSessionData(
@@ -46,7 +46,9 @@ async function oneLoop() {
     nextMxReqToken(),
     csrftoken,
     obj,
-    "hello " + new Date().getTime()
+    `from loadTest [${index
+      .toString()
+      .padStart(8, "0")}] ${new Date().toLocaleString()}`
   );
 }
 
