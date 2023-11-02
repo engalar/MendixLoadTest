@@ -1,7 +1,12 @@
 const axios = require("axios");
 
-axios
-  .post(
+async function getSessionData(
+  xasid,
+  XASSESSIONID,
+  mxReqToken,
+  profiledata = {}
+) {
+  const { data } = await axios.post(
     "http://127.0.0.1:8080/xas/",
     {
       action: "get_session_data",
@@ -23,9 +28,7 @@ axios
         ],
         version: 1,
       },
-      profiledata: {
-        "1698719978206-0": 16,
-      },
+      profiledata,
     },
     {
       headers: {
@@ -42,17 +45,16 @@ axios
         "sec-fetch-dest": "empty",
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-origin",
-        "x-mx-reqtoken": "1698719978230-1",
+        "x-mx-reqtoken": mxReqToken,
+        Cookie: `DeviceType=Desktop; Profile=Responsive; SessionTimeZoneOffset=-480; originURI=/login.html; XASSESSIONID=${XASSESSIONID}; xasid=${xasid}`,
       },
       referrer: "http://localhost:8080/",
       referrerPolicy: "strict-origin-when-cross-origin",
       mode: "cors",
       withCredentials: true,
     }
-  )
-  .then((response) => {
-    console.log(response.data.csrftoken);
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+  );
+  return data;
+}
+
+module.exports = { getSessionData };
