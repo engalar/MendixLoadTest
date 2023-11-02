@@ -1,4 +1,4 @@
-const { create } = require("./domain");
+const { create, commit } = require("./domain");
 const { getSessionData } = require("./get_session_data");
 const { login } = require("./login");
 
@@ -40,7 +40,14 @@ async function oneLoop() {
     csrftoken
   );
 
-  console.log(obj);
+  await commit(
+    xasid,
+    XASSESSIONID,
+    nextMxReqToken(),
+    csrftoken,
+    obj,
+    "hello " + new Date().getTime()
+  );
 }
 
 main();

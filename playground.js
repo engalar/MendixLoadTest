@@ -95,3 +95,17 @@ doFetch({
     },
   },
 });
+
+
+mx.data.create({
+  entity: "ECIS_DataModel.LkTaskType",
+  callback: (e) => {
+    e.set("Name", "hello " + new Date().getTime());
+    mx.data.commit({
+      mxobj: e,
+      callback: function () {
+        console.log(arguments);
+      },
+    });
+  },
+});
