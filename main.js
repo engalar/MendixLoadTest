@@ -10,34 +10,6 @@ function nextMxReqToken() {
 }
 
 async function main() {
-  const res = await getSessionData(null, null, nextMxReqToken());
-  // 解析所有的"Set-Cookie"头部
-  const setCookies = res.headers["set-cookie"];
-
-  // 解析每个cookie
-  if (setCookies) {
-    // 用于存储和管理cookie的对象
-    const cookieJar = {};
-    setCookies.forEach((cookieString) => {
-      const parsedCookie = cookie.parse(cookieString);
-      Object.assign(cookieJar, parsedCookie);
-    });
-    console.log(cookieJar);
-
-    const xasid = cookieJar.xasid,
-      XASSESSIONID = cookieJar["__Host-XASSESSIONID"],
-      csrftoken = res.data.csrftoken;
-
-    const obj = await create(
-      xasid,
-      XASSESSIONID,
-      "ECIS_DataModel.LkTaskType",
-      nextMxReqToken(),
-      csrftoken
-    );
-    console.log(obj);
-  }
-
   const start = Date.now();
   const promises = [];
 
@@ -54,29 +26,42 @@ async function main() {
 }
 
 async function oneLoop(index) {
-  const { xasid, XASSESSIONID } = await login("MxAdmin", "1");
+  const res = await getSessionData(null, null, nextMxReqToken());
+  // 解析所有的"Set-Cookie"头部
+  const setCookies = res.headers["set-cookie"];
 
-  const {
-    data: { csrftoken },
-  } = await getSessionData(xasid, XASSESSIONID, nextMxReqToken());
-  const obj = await create(
-    xasid,
-    XASSESSIONID,
-    "ECIS_DataModel.LkTaskType",
-    nextMxReqToken(),
-    csrftoken
-  );
+  // 解析每个cookie
+  if (setCookies) {
+    // 用于存储和管理cookie的对象
+    const cookieJar = {};
+    setCookies.forEach((cookieString) => {
+      const parsedCookie = cookie.parse(cookieString);
+      Object.assign(cookieJar, parsedCookie);
+    });
 
-  await commit(
-    xasid,
-    XASSESSIONID,
-    nextMxReqToken(),
-    csrftoken,
-    obj,
-    `from loadTest [${index
-      .toString()
-      .padStart(8, "0")}] ${new Date().toLocaleString()}`
-  );
+    const xasid = cookieJar.xasid,
+      XASSESSIONID = cookieJar["__Host-XASSESSIONID"],
+      csrftoken = res.data.csrftoken;
+
+    const obj = await create(
+      xasid,
+      XASSESSIONID,
+      "ECIS_DataModel.LkTaskType",
+      nextMxReqToken(),
+      csrftoken
+    );
+
+    await commit(
+      xasid,
+      XASSESSIONID,
+      nextMxReqToken(),
+      csrftoken,
+      obj,
+      `from loadTest 1129 [${index
+        .toString()
+        .padStart(8, "0")}] ${new Date().toLocaleString()}`
+    );
+  }
 }
 
 main();
