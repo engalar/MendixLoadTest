@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { XasUrl } = require("./config");
 
 async function commit(
   xasid,
@@ -40,7 +41,7 @@ async function commit(
   if (mxReqToken) {
     headers["x-mx-reqtoken"] = mxReqToken;
   }
-  const response = await axios.post("http://127.0.0.1:8080/xas/", body, {
+  const response = await axios.post(XasUrl, body, {
     headers: headers,
     referrer: "http://localhost:8080/index.html?profile=Responsive",
     referrerPolicy: "strict-origin-when-cross-origin",
@@ -81,7 +82,7 @@ async function create(
     headers["x-mx-reqtoken"] = mxReqToken;
   }
   const response = await axios.post(
-    "http://127.0.0.1:8080/xas/",
+    XasUrl,
     {
       action: "instantiate",
       params: { objecttype: entity },

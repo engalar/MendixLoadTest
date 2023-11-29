@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { XasUrl } = require("./config");
 
 /**
  *
@@ -35,7 +36,7 @@ async function login(
     headers["x-mx-reqtoken"] = mxReqToken;
   }
   const response = await axios.post(
-    "http://127.0.0.1:8080/xas/",
+    XasUrl,
     {
       action: "login",
       params: {
